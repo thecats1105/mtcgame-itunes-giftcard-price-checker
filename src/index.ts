@@ -1,5 +1,4 @@
 import { EmbedBuilder, WebhookClient } from "discord.js"
-import 'dotenv/config'
 
 // Ensure that the required environment variables are set
 const { DISCORD_WEBHOOK_ID, DISCORD_WEBHOOK_TOKEN } = process.env

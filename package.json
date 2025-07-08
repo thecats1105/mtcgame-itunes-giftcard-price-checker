@@ -17,7 +17,6 @@
     "start": "bun run src/index.ts"
   },
   "dependencies": {
-    "discord.js": "^14.21.0",
-    "dotenv": "^17.0.1"
+    "discord.js": "^14.21.0"
   }
 }
