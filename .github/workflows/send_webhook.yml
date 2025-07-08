@@ -3,13 +3,13 @@ name: Send Webhook
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 3 * * *'
 
 jobs:
   send_webhook:
     environment: main
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
