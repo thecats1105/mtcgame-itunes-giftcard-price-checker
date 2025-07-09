@@ -8,21 +8,23 @@ if (!DISCORD_WEBHOOK_ID || !DISCORD_WEBHOOK_TOKEN) {
   throw new Error('Missing required environment variables')
 }
 
-// Scrape the price for the 250TL iTunes Gift Card
-const price = (await scrapePrice())?.find(p => p.amount === 250)?.price
+// Scrape the prices from the MTCGAME website
+const prices = await scrapePrice()
 
 // Create an embed message to send to Discord
 const embed = new EmbedBuilder()
   .setTitle('MTCGAME iTunes Gift Card Turkey')
   .setURL(
-    'https://www.mtcgame.com/ko-KR/apple-store/itunes-hediye-karti/itunes-hediye-karti-250-tl-bakiye?currency=KRW'
+    'https://www.mtcgame.com/ko-KR/apple-store/itunes-hediye-karti/itunes-hediye-karti?currency=KRW'
   )
-  .setDescription('250TL iTunes Gift Card 가격 정보')
-  .addFields({
-    name: '가격',
-    value: `₩${price || '오류가 발생했습니다!'}`,
-    inline: true
-  })
+  .setDescription('iTunes Gift Card 가격 정보')
+  .addFields(
+    prices.map(p => ({
+      name: `₺${p.amount}`,
+      value: `₩${p.price}`,
+      inline: true
+    }))
+  )
   .setColor('#447D9B')
   .setTimestamp()
 
