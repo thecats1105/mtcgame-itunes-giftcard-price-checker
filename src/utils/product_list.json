@@ -1,0 +1,38 @@
+[
+  {
+    "amount": 25,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(1) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 50,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(2) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 100,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(3) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 250,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(4) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 400,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(5) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 500,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(6) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 600,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(7) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 750,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(8) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  },
+  {
+    "amount": 1000,
+    "selector": "#__next > main > div.bg-mtc-dark > div.pt-\\[4rem\\].sm\\:pt-0.dark > div.container.mx-auto.px-4.py-4.lg\\:py-10 > div > div.lg\\:w-4\\/6.order-2.lg\\:order-1.pt-4.lg\\:pt-0 > div.grid.md\\:grid-cols-2.gap-2.sm\\:pt-0.rounded-lg > a:nth-child(9) > div.text-right.bg-\\[\\#7CFF6B33\\].rounded.p-1 > p"
+  }
+]
