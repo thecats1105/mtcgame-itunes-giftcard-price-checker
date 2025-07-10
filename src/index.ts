@@ -1,5 +1,6 @@
-import { EmbedBuilder, WebhookClient } from 'discord.js'
-import scrapePrice from './utils/scrap'
+import { WebhookClient } from 'discord.js'
+import Embed from './utils/embed'
+import Database from './utils/database'
 
 // Ensure that the required environment variables are set
 const { DISCORD_WEBHOOK_ID, DISCORD_WEBHOOK_TOKEN } = process.env
@@ -8,25 +9,19 @@ if (!DISCORD_WEBHOOK_ID || !DISCORD_WEBHOOK_TOKEN) {
   throw new Error('Missing required environment variables')
 }
 
-// Scrape the prices from the MTCGAME website
-const prices = await scrapePrice()
+const database = new Database()
+
+await database.savePrices()
+
+const priceHistories = await database.getPrices()
 
 // Create an embed message to send to Discord
-const embed = new EmbedBuilder()
-  .setTitle('MTCGAME iTunes Gift Card Turkey')
-  .setURL(
-    'https://www.mtcgame.com/ko-KR/apple-store/itunes-hediye-karti/itunes-hediye-karti?currency=KRW'
-  )
-  .setDescription('iTunes Gift Card 가격 정보')
-  .addFields(
-    prices.map(p => ({
-      name: `₺${p.amount}`,
-      value: `₩${p.price}`,
-      inline: true
-    }))
-  )
-  .setColor('#447D9B')
-  .setTimestamp()
+const embeds = {
+  current: new Embed().current(priceHistories),
+  yesterday: new Embed().yesterday(priceHistories),
+  lastWeek: new Embed().lastWeek(priceHistories),
+  lastMonth: new Embed().lastMonth(priceHistories)
+}
 
 // Create a Discord webhook client and send the embed message
 const webhook = new WebhookClient({
@@ -35,6 +30,5 @@ const webhook = new WebhookClient({
 })
 webhook.send({
   username: 'MTCGAME Price Notifier',
-  content: '현재 가격 정보를 알려 드립니다!',
-  embeds: [embed]
+  embeds: [embeds.current, embeds.yesterday, embeds.lastWeek, embeds.lastMonth]
 })

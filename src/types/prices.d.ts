@@ -4,3 +4,10 @@ export interface Price {
 }
 
 export type Prices = Array<Price>
+
+export interface PriceHistories {
+  current: Prices | null
+  yesterday: Prices | null
+  lastWeek: Prices | null
+  lastMonth: Prices | null
+}
