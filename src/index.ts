@@ -11,8 +11,8 @@ if (!DISCORD_WEBHOOK_ID || !DISCORD_WEBHOOK_TOKEN) {
 
 const database = new Database()
 
+// Scrape the current prices and save them to the database
 await database.savePrices()
-
 const priceHistories = await database.getPrices()
 
 // Create an embed message to send to Discord
