@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import scrapePrice from './scrap'
 import type { PriceHistories } from '../types/prices'
-import type { NamespaceBulkGetResponse } from 'cloudflare/resources/kv.mjs'
+import type { NamespaceBulkGetResponse } from 'cloudflare/resources/kv'
 
 dayjs.extend(timezone)
 dayjs.tz.setDefault('Asia/Seoul')
@@ -69,57 +69,46 @@ export default class Database {
   private async bulkGet(
     keys: string[]
   ): Promise<NamespaceBulkGetResponse | null> {
-    return await client.kv.namespaces.bulkGet(CLOUDFLARE_KV_NAMESPACE_ID!, {
-      account_id: CLOUDFLARE_ACCOUNT_ID!,
-      keys
-    })
+    return await client.kv.namespaces
+      .bulkGet(CLOUDFLARE_KV_NAMESPACE_ID!, {
+        account_id: CLOUDFLARE_ACCOUNT_ID!,
+        keys
+      })
+      .catch(error => {
+        throw new Error(`Failed to bulk get keys: ${error.message}`)
+      })
   }
 
   // private async delete(key: string): Promise<void> {
-  //   await client.kv.namespaces
-  //     .bulkDelete(CLOUDFLARE_KV_NAMESPACE_ID!, {
-  //       account_id: CLOUDFLARE_ACCOUNT_ID!,
-  //       body: [key]
+  //   await client.kv.namespaces.values
+  //     .delete(CLOUDFLARE_KV_NAMESPACE_ID!, key, {
+  //       account_id: CLOUDFLARE_ACCOUNT_ID!
   //     })
-  //     .then(response => {
-  //       if (
-  //         response?.unsuccessful_keys &&
-  //         response?.unsuccessful_keys.length > 0
-  //       ) {
-  //         throw new Error(
-  //           `Failed to delete key: ${key}. Unsuccessful keys: ${response.unsuccessful_keys}`
-  //         )
-  //       }
+  //     .catch(() => {
+  //       throw new Error(`Failed to delete key: ${key}.`)
   //     })
   // }
 
   // private async get(key: string): Promise<string> {
-  //   const response = await client.kv.namespaces.bulkGet(
-  //     CLOUDFLARE_KV_NAMESPACE_ID!,
-  //     {
-  //       account_id: CLOUDFLARE_ACCOUNT_ID!,
-  //       keys: [key]
-  //     }
-  //   )
-  //
-  //   return response?.values?.[key] as string
+  //   return (
+  //     await client.kv.namespaces.values
+  //       .get(CLOUDFLARE_KV_NAMESPACE_ID!, key, {
+  //         account_id: CLOUDFLARE_ACCOUNT_ID!
+  //       })
+  //       .catch(() => {
+  //         throw new Error(`Failed to get key: ${key}.`)
+  //       })
+  //   ).text()
   // }
 
   private async update(key: string, value: string): Promise<void> {
-    await client.kv.namespaces
-      .bulkUpdate(CLOUDFLARE_KV_NAMESPACE_ID!, {
+    await client.kv.namespaces.values
+      .update(CLOUDFLARE_KV_NAMESPACE_ID!, key, {
         account_id: CLOUDFLARE_ACCOUNT_ID!,
-        body: [{ key, value }]
+        value
       })
-      .then(response => {
-        if (
-          response?.unsuccessful_keys &&
-          response?.unsuccessful_keys.length > 0
-        ) {
-          throw new Error(
-            `Failed to update key: ${key}. Unsuccessful keys: ${response.unsuccessful_keys}`
-          )
-        }
+      .catch(() => {
+        throw new Error(`Failed to update key: ${key}.`)
       })
   }
 }
