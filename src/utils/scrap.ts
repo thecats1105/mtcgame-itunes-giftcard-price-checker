@@ -26,6 +26,7 @@ export default async function scrapePrice(): Promise<Prices> {
   return scrapes.map(
     (scrape, index: number): Price => ({
       amount: productList[index]?.amount,
+      // @ts-expect-error cloudflare-typescript has a wrong type definition
       price: Number(scrape.results[0].text?.replace(/₩|,/g, '')) || undefined
     })
   )
