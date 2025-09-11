@@ -2,14 +2,14 @@ import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import scrapePrice from './scrap'
 import type { PriceHistories, Prices } from '../types/prices'
-import { Client, isFullDatabase, isFullPage } from '@notionhq/client'
+import { Client, isFullPage } from '@notionhq/client'
 
 dayjs.extend(timezone)
 dayjs.tz.setDefault('Asia/Seoul')
 
-const { NOTION_TOKEN, NOTION_DATABASE_ID } = process.env
+const { NOTION_TOKEN, NOTION_DATA_SOURCE_ID } = process.env
 
-if (!NOTION_TOKEN || !NOTION_DATABASE_ID) {
+if (!NOTION_TOKEN || !NOTION_DATA_SOURCE_ID) {
   throw new Error('Missing required environment variables')
 }
 
@@ -71,10 +71,8 @@ export default class Database {
   }
 
   private async get(date: string): Promise<Prices | null> {
-    const data_source_id = await this.getDataSourceId()
-
     const page = await client.dataSources.query({
-      data_source_id,
+      data_source_id: NOTION_DATA_SOURCE_ID!,
       filter: {
         property: 'date',
         date: {
@@ -85,9 +83,9 @@ export default class Database {
 
     if (page.results[0] && isFullPage(page.results[0])) {
       const properties = page.results[0].properties
-      // 'date' 속성 및 키가 비어있는 속성 제거
-      delete properties.date
+      // Remove non-price properties
       for (const key in properties) {
+        if (isNaN(Number(key))) delete properties[key]
         if (key === '') delete properties[key]
       }
 
@@ -112,14 +110,12 @@ export default class Database {
   }
 
   private async update(date: string, prices: Prices): Promise<void> {
-    const data_source_id = await this.getDataSourceId()
-
     async function oldPage(): Promise<{
       isAlreadyExist: boolean
       pageId?: string
     }> {
       const page = await client.dataSources.query({
-        data_source_id,
+        data_source_id: NOTION_DATA_SOURCE_ID!,
         filter: {
           property: 'date',
           date: {
@@ -158,22 +154,9 @@ export default class Database {
       })
     } else {
       await client.pages.create({
-        parent: { database_id: NOTION_DATABASE_ID! },
+        parent: { data_source_id: NOTION_DATA_SOURCE_ID! },
         properties
       })
     }
-  }
-
-  private async getDataSourceId(): Promise<string> {
-    const database = await client.databases.retrieve({
-      database_id: NOTION_DATABASE_ID!
-    })
-
-    let data_source_id
-    if (isFullDatabase(database) && database.data_sources[0])
-      data_source_id = database.data_sources[0].id
-    else throw new Error('No data source found')
-
-    return data_source_id
   }
 }
