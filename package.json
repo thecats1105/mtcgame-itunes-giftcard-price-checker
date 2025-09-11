@@ -15,7 +15,9 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "sendWebhook": "bun run src/utils/sendWebhook.ts",
+    "savePrices": "bun run src/utils/savePrices.ts"
   },
   "dependencies": {
     "@notionhq/client": "^5.0.0",

@@ -1,11 +1,5 @@
-import dayjs from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import scrapePrice from './scrap'
-import type { PriceHistories, Prices } from '../types/prices'
+import type { Prices } from '../types/prices'
 import { Client, isFullPage } from '@notionhq/client'
-
-dayjs.extend(timezone)
-dayjs.tz.setDefault('Asia/Seoul')
 
 const { NOTION_TOKEN, NOTION_DATA_SOURCE_ID } = process.env
 
@@ -19,46 +13,7 @@ const client = new Client({
 })
 
 export default class Database {
-  async getPrices(): Promise<PriceHistories> {
-    const currentDate = dayjs().format('YYYY-MM-DD')
-    const yesterdayDate = dayjs(currentDate)
-      .subtract(1, 'day')
-      .format('YYYY-MM-DD')
-    const lastWeekDate = dayjs(currentDate)
-      .subtract(7, 'day')
-      .format('YYYY-MM-DD')
-    const lastMonthDate = dayjs(currentDate)
-      .subtract(30, 'day')
-      .format('YYYY-MM-DD')
-
-    const response = await this.bulkGet([
-      currentDate,
-      yesterdayDate,
-      lastWeekDate,
-      lastMonthDate
-    ])
-
-    return {
-      current: response[currentDate] ?? null,
-      yesterday: response[yesterdayDate] ?? null,
-      lastWeek: response[lastWeekDate] ?? null,
-      lastMonth: response[lastMonthDate] ?? null
-    }
-  }
-
-  async savePrices(): Promise<void> {
-    const currentDate = dayjs().format('YYYY-MM-DD')
-
-    const prices = await scrapePrice().catch(error => {
-      throw new Error(`Failed to scrape prices: ${error.message}`)
-    })
-
-    await this.update(currentDate, prices)
-  }
-
-  private async bulkGet(
-    dates: string[]
-  ): Promise<Record<string, Prices | null>> {
+  async bulkGet(dates: string[]): Promise<Record<string, Prices | null>> {
     const results = await Promise.all(dates.map(date => this.get(date)))
 
     return dates.reduce(
@@ -70,7 +25,7 @@ export default class Database {
     )
   }
 
-  private async get(date: string): Promise<Prices | null> {
+  async get(date: string): Promise<Prices | null> {
     const page = await client.dataSources.query({
       data_source_id: NOTION_DATA_SOURCE_ID!,
       filter: {
@@ -109,7 +64,7 @@ export default class Database {
     return null
   }
 
-  private async update(date: string, prices: Prices): Promise<void> {
+  async update(date: string, prices: Prices): Promise<void> {
     async function oldPage(): Promise<{
       isAlreadyExist: boolean
       pageId?: string
