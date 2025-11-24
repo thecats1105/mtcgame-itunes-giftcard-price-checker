@@ -10,7 +10,7 @@ if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_API_TOKEN) {
 }
 
 const targetUrl =
-  'https://www.mtcgame.com/ko-KR/apple-store/itunes-hediye-karti?currency=KRW'
+  'https://www.mtcgame.com/ko/apple-store/itunes-hediye-karti?currency=KRW'
 
 const client = new Cloudflare()
 
