@@ -1,33 +1,45 @@
-import Cloudflare from 'cloudflare'
+import puppeteer from 'puppeteer'
 import productList from './product_list.json'
 import type { Price, Prices } from '../types/prices'
 
-// Ensure that the required environment variables are set
-const { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN } = process.env
-
-if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_API_TOKEN) {
-  throw new Error('Missing required environment variables')
-}
-
 const targetUrl =
-  'https://www.mtcgame.com/ko/apple-store/itunes-hediye-karti?currency=KRW'
-
-const client = new Cloudflare()
+  'https://www.mtcgame.com/apple-store/itunes-hediye-karti?currency=KRW'
 
 export default async function scrapePrice(): Promise<Prices> {
-  const scrapes = await client.browserRendering.scrape.create({
-    account_id: CLOUDFLARE_ACCOUNT_ID!,
-    elements: productList.map(product => ({
-      selector: product.selector
-    })),
-    url: targetUrl
-  })
+  const selectors = productList.map(product => product.selector)
+
+  const scrapes = await createScrape(targetUrl, selectors)
 
   return scrapes.map(
-    (scrape, index: number): Price => ({
-      amount: productList[index]?.amount,
-      // @ts-expect-error cloudflare-typescript has a wrong type definition
-      price: Number(scrape.results[0].text?.replace(/₩|,/g, '')) || undefined
+    (scrape, i): Price => ({
+      amount: productList[i]?.amount,
+      price: Number(scrape.results[0]?.replace(/₩|,/g, '').trim()) || undefined
     })
   )
+}
+
+async function createScrape(
+  url: string,
+  selectors: string[]
+): Promise<{ selector: string; results: string[] }[]> {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  })
+
+  const page = await browser.newPage()
+  await page.goto(url)
+
+  const results = await Promise.all(
+    selectors.map(selector =>
+      page.$$eval(selector, els => els.map(el => el.textContent))
+    )
+  )
+
+  await browser.close()
+
+  return selectors.map((selector, i) => ({
+    selector,
+    results: results[i] || []
+  }))
 }
