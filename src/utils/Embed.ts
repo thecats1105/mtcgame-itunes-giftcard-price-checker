@@ -1,4 +1,5 @@
 import { EmbedBuilder } from 'discord.js'
+import productList from './product_list.json'
 import type { PriceHistories, Prices } from '../types/prices'
 
 export default class Embed {
@@ -57,9 +58,7 @@ export default class Embed {
   current(priceHistories: PriceHistories): EmbedBuilder {
     return new EmbedBuilder()
       .setTitle('MTCGAME iTunes Gift Card Turkey')
-      .setURL(
-        'https://www.mtcgame.com/ko-KR/apple-store/itunes-hediye-karti/itunes-hediye-karti?currency=KRW'
-      )
+      .setURL(productList.url)
       .addFields(
         priceHistories.current
           ? priceHistories.current?.map(p => ({

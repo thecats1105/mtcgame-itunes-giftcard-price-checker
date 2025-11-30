@@ -2,17 +2,16 @@ import puppeteer from 'puppeteer'
 import productList from './product_list.json'
 import type { Price, Prices } from '../types/prices'
 
-const targetUrl =
-  'https://www.mtcgame.com/apple-store/itunes-hediye-karti?currency=KRW'
+const targetUrl = productList.url
 
 export default async function scrapePrice(): Promise<Prices> {
-  const selectors = productList.map(product => product.selector)
+  const selectors = productList.list.map(product => product.selector)
 
   const scrapes = await createScrape(targetUrl, selectors)
 
   return scrapes.map(
     (scrape, i): Price => ({
-      amount: productList[i]?.amount,
+      amount: productList.list[i]?.amount,
       price: Number(scrape.results[0]?.replace(/₩|,/g, '').trim()) || undefined
     })
   )
