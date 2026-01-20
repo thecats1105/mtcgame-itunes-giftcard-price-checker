@@ -16,8 +16,7 @@
   },
   "scripts": {
     "start": "bun run src/index.ts",
-    "sendWebhook": "bun run src/utils/sendWebhook.ts",
-    "savePrices": "bun run src/utils/savePrices.ts"
+    "lint": "eslint src/"
   },
   "dependencies": {
     "@notionhq/client": "^5.3.0",

@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import productList from './product_list.json'
+import productList from '../product_list.json'
 import type { Price, Prices } from '../types/prices'
 
 const targetUrl = productList.url

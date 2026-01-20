@@ -13,5 +13,3 @@ export default async function savePrices(): Promise<void> {
 
   await db.update(currentDate, prices)
 }
-
-if (import.meta.main) await savePrices()

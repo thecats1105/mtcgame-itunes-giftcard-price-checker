@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js'
-import productList from './product_list.json'
+import productList from '../product_list.json'
 import type { PriceHistories, Prices } from '../types/prices'
 
 export default class Embed {
