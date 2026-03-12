@@ -2,30 +2,51 @@ import { EmbedBuilder } from 'discord.js'
 import productList from '../product_list.json'
 import type { PriceHistories, Prices } from '../types/prices'
 
+function findComparablePrices(
+  currentPrices: Prices,
+  historyPrices: Prices
+): { currentPrice: number; historyPrice: number } | undefined {
+  for (let i = historyPrices.length - 1; i >= 0; i--) {
+    const historyItem = historyPrices[i]
+    if (historyItem?.price === undefined || historyItem.amount === undefined)
+      continue
+
+    const currentItem = currentPrices.find(p => p.amount === historyItem.amount)
+    if (currentItem?.price !== undefined) {
+      return {
+        currentPrice: currentItem.price,
+        historyPrice: historyItem.price
+      }
+    }
+  }
+  return undefined
+}
+
 export default class Embed {
   private createPriceHistoryEmbed(
     title: string,
     currentPrices: Prices | null,
     historyPrices: Prices | null
   ): EmbedBuilder {
-    const currentLastPrice = currentPrices?.at(-1)?.price
-    const historyLastPrice = historyPrices?.at(-1)?.price
+    const comparable =
+      currentPrices && historyPrices
+        ? findComparablePrices(currentPrices, historyPrices)
+        : undefined
 
-    let description = ''
-    if (currentLastPrice && historyLastPrice) {
-      if (currentLastPrice === historyLastPrice) {
+    let description = '정보 없음'
+    if (comparable) {
+      const { currentPrice, historyPrice } = comparable
+      if (currentPrice === historyPrice) {
         description = '변동 없음'
       } else {
         const percentageChange = (
-          ((currentLastPrice - historyLastPrice) / historyLastPrice) *
+          ((currentPrice - historyPrice) / historyPrice) *
           100
         ).toFixed(2)
         description = `${title} 대비 ${percentageChange}% ${
-          currentLastPrice > historyLastPrice ? '🔺' : '🔻'
+          currentPrice > historyPrice ? '🔺' : '🔻'
         }`
       }
-    } else if (!historyPrices) {
-      description = '정보 없음'
     }
 
     const embed = new EmbedBuilder()
@@ -34,13 +55,7 @@ export default class Embed {
       .setColor('#447D9B')
       .setTimestamp()
 
-    if (
-      !(
-        currentLastPrice &&
-        historyLastPrice &&
-        currentLastPrice === historyLastPrice
-      )
-    ) {
+    if (!(comparable && comparable.currentPrice === comparable.historyPrice)) {
       embed.addFields(
         historyPrices
           ? historyPrices.map(p => ({
